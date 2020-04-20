@@ -3,21 +3,24 @@ from matplotlib import pyplot as plt
 from datetime import datetime
 
 # Get dates ,high and low  temperatures from file.
-filename = 'sitka_weather_2018_simple.csv'
+#filename = 'sitka_weather_2018_simple.csv'
+filename = 'death_valley_2018_simple.csv'
 with open(filename) as f:
     reader = csv.reader(f)
     header_row = next(reader)
 
     dates, highs, lows = [], [], []
     for row in reader:
-        current_date = datetime.strptime(row[2], "%Y-%m-%d")
-        dates.append(current_date)
-
-        high = int(row[5])
-        highs.append(high)
-
-        low = int(row[6])
-        lows.append(low)
+        try:
+            current_date = datetime.strptime(row[2], "%Y-%m-%d")
+            high = int(row[4])
+            low = int(row[5])
+        except ValueError:
+            print(current_date, 'missing data')
+        else:
+            dates.append(current_date)
+            highs.append(high)
+            lows.append(low)
 
 # Plot data.
 fig = plt.figure(dpi=128, figsize=(10, 6))
@@ -26,7 +29,9 @@ plt.plot(dates, lows, c='blue', alpha=0.5)
 plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
 
 # Format plot
-plt.title("Daily high and low temperatures - 2018", fontsize=24)
+#plt.title("Daily high and low temperatures - 2018", fontsize=24)
+title = "Daily high and low temperatures - 2018\nDeath Valley, CA"
+plt.title(title, fontsize=20)
 plt.xlabel('', fontsize=16)
 fig.autofmt_xdate()
 plt.ylabel("Temperature (F)", fontsize=16)
